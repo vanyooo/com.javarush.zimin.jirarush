@@ -91,7 +91,8 @@ create table USERS
     LAST_NAME    varchar(32),
     PASSWORD     varchar(128) not null,
     ENDPOINT     timestamp,
-    STARTPOINT   timestamp
+    STARTPOINT   timestamp,
+    LOCALE       varchar(32)
 );
 
 create table PROFILE
@@ -107,7 +108,7 @@ create table CONTACT
 (
     ID    bigint       not null,
     CODE  varchar(32)  not null,
-    CONTACT_VALUE varchar(256) not null,
+    VALUE varchar(256) not null,
     primary key (ID, CODE),
     constraint FK_CONTACT_PROFILE foreign key (ID) references PROFILE (ID) on delete cascade
 );
@@ -282,14 +283,12 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
 
 alter table ACTIVITY drop constraint FK_ACTIVITY_USERS;
 alter table ACTIVITY add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
-
-alter table USER_BELONG
-    drop constraint FK_USER_BELONG,
-    add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
-
-alter table ATTACHMENT
-    drop constraint FK_ATTACHMENT,
-    add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
+--
+alter table USER_BELONG drop constraint FK_USER_BELONG;
+alter table USER_BELONG add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
+--
+alter table ATTACHMENT drop constraint FK_ATTACHMENT;
+alter table ATTACHMENT add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 --changeset valeriyemelyanov:change_user_type_reference
 
@@ -326,4 +325,5 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 --changeset ishlyakhtenkov:change_UK_USER_BELONG
 
 drop index UK_USER_BELONG;
-create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+-- create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+-- В H2 индексы с использованием WHERE не могут быть уникальными

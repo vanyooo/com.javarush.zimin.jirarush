@@ -97,6 +97,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -135,6 +136,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- Зависимость для H2 базы -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <!--        https://youtrack.jetbrains.com/issue/IDEA-231927-->
         <dependency>
@@ -199,7 +206,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <skipTests>true</skipTests>
+                            <skipTests>false</skipTests>
                         </configuration>
                     </plugin>
                 </plugins>

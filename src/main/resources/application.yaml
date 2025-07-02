@@ -16,7 +16,7 @@ spring:
 
     # validate db by model
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
 
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
@@ -32,6 +32,7 @@ spring:
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
+    enabled: false
 
   # Jackson Fields Serialization
   jackson:
