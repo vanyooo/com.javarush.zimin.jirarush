@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -140,4 +142,26 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
+    @Transactional
+    public void addTagsToTask(Long taskId, List<String> tagNames) {
+        Task task = handler.getRepository().findById(taskId)
+                .orElseThrow(() -> new NotFoundException("Task not found"));
+        Set<String> currentTags = new HashSet<>(task.getTags());
+        currentTags.addAll(tagNames);
+        task.setTags(currentTags);
+        handler.getRepository().save(task);
+    }
+
+    @Transactional
+    public void removeTagsFromTask(Long taskId, List<String> tagNames) {
+        Task task = handler.getRepository().findById(taskId)
+                .orElseThrow(() -> new NotFoundException("Task not found"));
+
+        Set<String> currentTags = new HashSet<>(task.getTags());
+        tagNames.forEach(currentTags::remove);
+        task.setTags(currentTags);
+        handler.getRepository().save(task);
+    }
+
 }

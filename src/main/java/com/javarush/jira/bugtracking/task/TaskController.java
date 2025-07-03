@@ -156,4 +156,18 @@ public class TaskController {
             this(taskTo, new LinkedList<>());
         }
     }
+
+    @PatchMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addTags(@PathVariable long id, @RequestBody List<String> tags) {
+        log.info("Add tags {} to task {}", tags, id);
+        taskService.addTagsToTask(id, tags);
+    }
+
+    @DeleteMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeTags(@PathVariable long id, @RequestBody List<String> tags) {
+        log.info("Remove tags {} from task {}", tags, id);
+        taskService.removeTagsFromTask(id, tags);
+    }
 }

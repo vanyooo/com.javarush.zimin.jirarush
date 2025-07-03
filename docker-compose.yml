@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: jira_postgres
+    environment:
+      POSTGRES_USER: jirauser
+      POSTGRES_PASSWORD: jirapass
+      POSTGRES_DB: jiradb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  jira-app:
+    image: jira_app
+    container_name: jira_app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jiradb
+      SPRING_DATASOURCE_USERNAME: jirauser
+      SPRING_DATASOURCE_PASSWORD: jirapass
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/_application-prod.yaml:/config/_application-prod.yaml
+
+volumes:
+  postgres_data:
